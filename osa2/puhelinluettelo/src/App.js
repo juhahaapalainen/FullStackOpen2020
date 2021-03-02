@@ -37,13 +37,40 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
     //console.log("Nappia painettu", event.target, newName);
+    const korvattava = persons.find((nimi) => nimi.name === newName);
+    //   .map((id) => id.id)
+    //   .reduce((prev, current) => prev.concat(current), []);
 
     const personObject = {
       name: newName,
       number: newNumber,
     };
     if (persons.some((nimi) => nimi.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+      //alert(`${newName} is already added to phonebook`);
+
+      //console.log(korvattava);
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        console.log("Update ", korvattava);
+
+        personService.update(korvattava.id, personObject).then(() => {
+          const updateObject = {
+            name: newName,
+            number: newNumber,
+            id: korvattava.id,
+          };
+          let temp = [...persons];
+          temp[korvattava.id - 1] = updateObject;
+          setPersons(temp);
+          setNewName("");
+          setNewNumber("");
+          //console.log("Persons", persons);
+          //console.log("Temp", temp);
+        });
+      }
     } else {
       personService
         .create(personObject)
@@ -54,7 +81,7 @@ const App = () => {
           setNewNumber("");
         });
     }
-
+    //console.log("Persoonat", persons);
     // console.log("Persons", persons);
   };
 
