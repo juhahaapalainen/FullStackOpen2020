@@ -1,6 +1,13 @@
 import React from "react";
 
-const AddPerson = ({ handleNameChange, handleNumberChange, addPerson }) => {
+const AddPerson = ({
+  handleNameChange,
+  handleNumberChange,
+  addPerson,
+  newName,
+  newNumber,
+}) => {
+  //console.log("AddPersonista: ", newName, newNumber);
   return (
     <form onSubmit={addPerson}>
       <div>
@@ -8,6 +15,7 @@ const AddPerson = ({ handleNameChange, handleNumberChange, addPerson }) => {
         <input
           type="text"
           name="name"
+          value={newName}
           onChange={(e) => handleNameChange(e.target.value)}
         />
       </div>
@@ -16,6 +24,7 @@ const AddPerson = ({ handleNameChange, handleNumberChange, addPerson }) => {
         <input
           type="text"
           name="number"
+          value={newNumber}
           onChange={(e) => handleNumberChange(e.target.value)}
         />
       </div>

@@ -1,25 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Filter from "./Components/Filter";
 import AddPerson from "./Components/AddPerson";
 import Persons from "./Components/Persons";
+import personService from "./services/personService";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-1231244" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    personService
+      .getAll()
+
+      .then((personData) => {
+        // console.log("promise fulfilled");
+        // console.log(response.data);
+        setPersons(personData);
+      });
+  }, []);
 
   const handleFilter = (newFilter) => {
     setFilter(newFilter);
   };
 
   const handleNameChange = (newName) => {
-    console.log("handleInputChange", newName);
+    //console.log("handleNameChange", newName);
     setNewName(newName);
   };
   const handleNumberChange = (newNumber) => {
@@ -38,12 +45,31 @@ const App = () => {
     if (persons.some((nimi) => nimi.name === newName)) {
       alert(`${newName} is already added to phonebook`);
     } else {
-      setPersons(persons.concat(personObject));
-      setNewName("");
-      setNewNumber("");
+      personService
+        .create(personObject)
+
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName("");
+          setNewNumber("");
+        });
     }
 
     // console.log("Persons", persons);
+  };
+
+  const deletePerson = (event, id, name) => {
+    event.preventDefault();
+    console.log("Poista id: ", id);
+
+    if (window.confirm(`Delete ${name} ?`)) {
+      console.log("Poistetaan");
+      personService
+        .deletePers(id)
+        .then(setPersons(persons.filter((person) => person.id !== id)));
+    } else {
+      console.log("Perutaan poisto");
+    }
   };
 
   return (
@@ -58,11 +84,13 @@ const App = () => {
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
         addPerson={addPerson}
+        newName={newName}
+        newNumber={newNumber}
       />
 
       <h3>Numbers</h3>
 
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} deletePerson={deletePerson} />
     </div>
   );
 };
