@@ -6,7 +6,9 @@ const Persons = ({ deletePerson, persons, filter }) => {
     <div>
       <div>
         {persons
-          .filter((suodatin) => suodatin.name.includes(filter))
+          .filter((suodatin) =>
+            suodatin.name.toLowerCase().includes(filter.toLowerCase())
+          )
           .map((person) => (
             <div key={person.name}>
               {person.name} {person.number}
