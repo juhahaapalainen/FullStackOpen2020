@@ -50,7 +50,7 @@ const App = () => {
 
     if (persons.some((nimi) => nimi.name === newName)) {
       //alert(`${newName} is already added to phonebook`);
-      //console.log(korvattava);
+      //console.log("Korvattavan id", korvattava.id);
       if (
         window.confirm(
           `${newName} is already added to phonebook, replace the old number with a new one?`
