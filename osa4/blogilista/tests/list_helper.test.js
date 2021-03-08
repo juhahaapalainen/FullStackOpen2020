@@ -155,7 +155,7 @@ describe("favoriteBlog", () => {
   ];
   test("favorite", () => {
     const result = listHelper.favoriteBlog(manyBlogs);
-    const expected = [
+    const expected = 
       {
         _id: "5a422b3a1b54a676234d17f9",
         title: "Canonical string reduction",
@@ -163,8 +163,8 @@ describe("favoriteBlog", () => {
         url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
         likes: 12,
         __v: 0,
-      },
-    ];
+      }
+    
     expect(result).toEqual(expected);
   });
 });

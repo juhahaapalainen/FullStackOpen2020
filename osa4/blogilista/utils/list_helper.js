@@ -7,7 +7,7 @@ const dummy = (blogs) => {
 const totalLikes = (blogs) => {
   let summa = 0;
   //console.log(blog);
-  blogs.map((blg) => (summa += blg.likes));
+  blogs.map((blg) => (summa += blg.likes)); 
   //   console.log(blogs);
   //   console.log("LIKES", blogs.likes);
   return summa;
@@ -18,8 +18,8 @@ const favoriteBlog = (blogs) => {
     return blg.likes >= max.likes ? blg : max;
   });
 
-  console.log("SUOSITUIN", suosituin);
-
+ // console.log("SUOSITUIN", suosituin);
+  
   return suosituin;
 };
 
