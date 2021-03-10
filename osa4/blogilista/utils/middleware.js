@@ -1,4 +1,5 @@
 const { request, response } = require('../app')
+const User = require('../models/user')
 const logger = require('./logger')
 
 const requestLogger = (request, response, next) => {
@@ -38,7 +39,16 @@ const tokenExtractor = (request, response, next) => {
     token = authorization.substring(7)
   }
   request.token = token
+
   next()
+}
+
+const userExtractor = (request, response, next) => {
+  const user= User.findOne({ _id: request.token.id })
+
+  request.user = user
+  next()
+
 }
 
 module.exports = {
@@ -46,4 +56,5 @@ module.exports = {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
+  userExtractor,
 }
