@@ -3,6 +3,7 @@ const { request, response } = require('../app')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const { userExtractor } = require('../utils/middleware')
 
 // blogsRouter.get('/', (request, response) => {
 //   response.send('<div>test</div>')
@@ -24,7 +25,7 @@ blogsRouter.get('/', async(request, response) => {
   response.json(blogs.map(blog => blog.toJSON()))
 })
 
-blogsRouter.post('/', async(request, response, next) => {
+blogsRouter.post('/', userExtractor, async(request, response, next) => {
   // const blog = new Blog(request.body)
 
   // blog.save().then((result) => {
@@ -33,17 +34,17 @@ blogsRouter.post('/', async(request, response, next) => {
   const body = request.body
   // console.log('Token: ', request.token)
   // const token = getTokenFrom(request)
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if(!request.token ||! decodedToken.id) {
-    return response.status(401).json({ error: 'missing or invalid token' })
-  }
+  // const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  // if(!request.token ||! decodedToken.id) {
+  //   return response.status(401).json({ error: 'missing or invalid token' })
+  // }
 
 
 
-
+  const user = request.user
   //console.log('bodyid', body.userId)
-  const user = await User.findById(decodedToken.id)
-  //console.log('Userid', user)
+  //const user = await User.findById(decodedToken.id)
+  console.log('Userid', user)
   const blog = new Blog({
     title: body.title,
     author: body.author,
@@ -72,7 +73,7 @@ blogsRouter.get('/:id', async(request, response) => {
 
 })
 
-blogsRouter.delete('/:id', async(request, response) => {
+blogsRouter.delete('/:id',userExtractor, async(request, response) => {
 
   // await Blog.findByIdAndDelete(request.params.id)
   // response.status(204).end()
@@ -83,12 +84,12 @@ blogsRouter.delete('/:id', async(request, response) => {
     return response.status(404).json({ error: 'blog not found' })
   }
 
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  //const decodedToken = jwt.verify(request.token, process.env.SECRET)
   //const userid = decodedToken.id
   // console.log('BLOGIPOISTO:' ,blog)
   // console.log('BLOGIPOISTO:' ,userid)
 
-  if(blog.user.toString() === decodedToken.id.toString()) {
+  if(blog.user.toString() === request.user.id.toString()) {
     //console.log('Poistettaan!')
     await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()

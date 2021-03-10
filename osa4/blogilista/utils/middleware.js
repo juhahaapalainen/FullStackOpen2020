@@ -1,6 +1,7 @@
 const { request, response } = require('../app')
 const User = require('../models/user')
 const logger = require('./logger')
+const jwt = require('jsonwebtoken')
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
@@ -43,9 +44,20 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
-const userExtractor = (request, response, next) => {
-  const user= User.findOne({ _id: request.token.id })
+const userExtractor = async(request, response, next) => {
+  // let user = null
 
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if(!request.token ||! decodedToken.id) {
+    return response.status(401).json({ error: 'missing or invalid token' })
+  }
+
+
+  //console.log('kokkeillaan loyttaa uuseri!')
+  //const user = await jwt.decode(request.token, process.env.SECRET)
+  const user = await User.findById(decodedToken.id)
+
+  console.log('Loydetty uuseri: ', user)
   request.user = user
   next()
 
