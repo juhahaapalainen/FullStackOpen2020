@@ -1,4 +1,3 @@
-const { request, response } = require('../app')
 const User = require('../models/user')
 const logger = require('./logger')
 const jwt = require('jsonwebtoken')
@@ -17,7 +16,7 @@ const unknownEndpoint = (request, response) => {
 
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message)
-
+  //console.log('errorname:' ,error.name)
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
@@ -36,7 +35,7 @@ const tokenExtractor = (request, response, next) => {
 
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    //console.log('Auth from tokenExtractor:' ,authorization.substring(7))
+
     token = authorization.substring(7)
   }
   request.token = token
@@ -45,19 +44,14 @@ const tokenExtractor = (request, response, next) => {
 }
 
 const userExtractor = async(request, response, next) => {
-  // let user = null
 
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if(!request.token ||! decodedToken.id) {
     return response.status(401).json({ error: 'missing or invalid token' })
   }
 
-
-  //console.log('kokkeillaan loyttaa uuseri!')
-  //const user = await jwt.decode(request.token, process.env.SECRET)
   const user = await User.findById(decodedToken.id)
 
-  console.log('Loydetty uuseri: ', user)
   request.user = user
   next()
 

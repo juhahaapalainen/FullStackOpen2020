@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-
 const api = supertest(app)
 const Blog = require('../models/blog')
+
+let token
+let user
 
 const initialBlogs = [
   {
@@ -19,12 +21,30 @@ const initialBlogs = [
     likes: 4,
   },
 ]
+
+beforeAll((done) => {
+  api
+    .post('/api/login')
+    .send({
+      username: 'testikayttaja',
+      password: 'werisikritwoort'
+    })
+    .end((err, response) => {
+      // console.log('mit',response.body)
+      user = response.body
+      token = response.body.token
+      done()
+    })
+})
+
 beforeEach(async () => {
   await Blog.deleteMany({})
   let blogObject = new Blog(initialBlogs[0])
   await blogObject.save()
   blogObject = new Blog(initialBlogs[1])
   await blogObject.save()
+
+
 })
 
 test('blogs are returned as json', async () => {
@@ -53,9 +73,11 @@ test('a valid blog can be added', async() => {
     author: 'New author',
     url: 'www.newurl.com',
     likes: 0,
+    user: user._id
   }
   await api
     .post('/api/blogs')
+    .auth(token, { type:'bearer' } )
     .send(newBlog)
     .expect(200)
     .expect('Content-Type', /application\/json/)
@@ -73,10 +95,6 @@ test('blog id field is named id', async () => {
 
   const response = await api.get('/api/blogs')
 
-  //   for(int i = 0; i<response.body.length; i++) {
-  //     expect((response.body[i]).id).toBeDefined()
-
-  //   }
   expect((response.body[0]).id).toBeDefined()
   expect((response.body[1]).id).toBeDefined()
 })
@@ -89,6 +107,7 @@ test('blog without title and url is not added', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
+    .auth(token, { type:'bearer' } )
     .expect(400)
 
   const response = await api.get('/api/blogs')
@@ -107,12 +126,32 @@ test('blog without likes get likes set to 0', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
+    .auth(token, { type:'bearer' } )
     .expect(200)
 
   const response = await api.get('/api/blogs')
 
 
   expect(response.body[2].likes).toBe(0)
+})
+
+test('blog cant be added if no auth', async() => {
+  const newBlog = {
+    title: 'New blog',
+    author: 'New author',
+    url: 'www.newurl.com',
+    likes: 0,
+    user: user._id
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length)
+
 })
 
 afterAll(() => {

@@ -18,7 +18,7 @@ mongoose
     useFindAndModify: false,
     useCreateIndex: true,
   })
-  .then((results) => {
+  .then(() => {
     logger.info('connected to MongoDB')
   })
   .catch((error) => {
