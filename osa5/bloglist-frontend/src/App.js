@@ -31,145 +31,145 @@ const App = () => {
     }
   }, [])
 
-const handleLogin = async (event) => {
-  event.preventDefault()
- // console.log('loggin in' ,username,password)
- try {
-  const user = await loginService.login({
-    username, password,
-  })
-  window.localStorage.setItem(
-    'loggedUser', JSON.stringify(user)
-  ) 
-  blogService.setToken(user.token)
-  setUser(user)
-  setUsername('')
-  setPassword('')
-  setMessage(
-    `Login succesfull`
-  );
-  setTimeout(() => {
-    setMessage(null);
-  }, 5000);
-} catch (exception) {
-  setErrorMessage('wrong username or password')
-  setTimeout(() => {
-    setErrorMessage(null)
-  }, 5000)
-}
-}
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    // console.log('loggin in' ,username,password)
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+      window.localStorage.setItem(
+        'loggedUser', JSON.stringify(user)
+      ) 
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+      setMessage(
+        'Login succesfull'
+      )
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setErrorMessage('wrong username or password')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
 
-const handleLogout = (event) => {
-  event.preventDefault()
-  window.localStorage.removeItem('loggedUser')
-  blogService.setToken(null)
-  setUser(null)
-  setUsername('')
-  setPassword('')
-  setMessage(
-    `Logout succesfull`
-  );
-  setTimeout(() => {
-    setMessage(null);
-  }, 5000);
-}
+  const handleLogout = (event) => {
+    event.preventDefault()
+    window.localStorage.removeItem('loggedUser')
+    blogService.setToken(null)
+    setUser(null)
+    setUsername('')
+    setPassword('')
+    setMessage(
+      'Logout succesfull'
+    )
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
 
-const loginForm = () => (
-  <form onSubmit={handleLogin}>
-  <div>
+  const loginForm = () => (
+    <form onSubmit={handleLogin}>
+      <div>
     username
-      <input
-      type="text"
-      value={username}
-      name="Username"
-      onChange={({ target }) => setUsername(target.value)}
-    />
-  </div>
-  <div>
+        <input
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
+        />
+      </div>
+      <div>
     password
-      <input
-      type="password"
-      value={password}
-      name="Password"
-      onChange={({ target }) => setPassword(target.value)}
-    />
-  </div>
-  <button type="submit">login</button>
-</form>
+        <input
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
+        />
+      </div>
+      <button type="submit">login</button>
+    </form>
 
-)
+  )
 
-const blogForm = () => (
+  const blogForm = () => (
   
-  <form onSubmit={addBlog}>
-    <div>
+    <form onSubmit={addBlog}>
+      <div>
       title
-      <input
-      type='text'
-        value={newTitle}
-        name = 'title'
-        onChange={({ target }) => setNewTitle(target.value)}
-      />
+        <input
+          type='text'
+          value={newTitle}
+          name = 'title'
+          onChange={({ target }) => setNewTitle(target.value)}
+        />
       </div>
       <div>
         author
-      <input
-      type='text'
-        value={newAuthor}
-        name = 'author'
-        onChange={({ target }) => setNewAuthor(target.value)}
-      />
+        <input
+          type='text'
+          value={newAuthor}
+          name = 'author'
+          onChange={({ target }) => setNewAuthor(target.value)}
+        />
       </div>
       <div>
         url
-      <input
-      type='text'
-        value={newUrl}
-        name = 'url'
-        onChange={({ target }) => setNewUrl(target.value)}
-      />
+        <input
+          type='text'
+          value={newUrl}
+          name = 'url'
+          onChange={({ target }) => setNewUrl(target.value)}
+        />
       </div>
       <button type="submit">save</button>
-  </form>  
+    </form>  
   
-)
+  )
 
 
 
-const addBlog =(event) => {
-  event.preventDefault()
-  const blogObject = {
-    title: newTitle,
-    author: newAuthor,
-    url: newUrl,
+  const addBlog =(event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+    }
+
+  
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setNewTitle('')
+        setNewAuthor('')
+        setNewUrl('')
+
+        setMessage(
+          `Blog '${returnedBlog.title}' added on server`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
+      .catch((error) => {
+        console.log(error)
+        setErrorMessage('Title and url are required')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+
+      })
+
   }
-
-  
-  blogService
-    .create(blogObject)
-    .then(returnedBlog => {
-      setBlogs(blogs.concat(returnedBlog))
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
-
-      setMessage(
-        `Blog '${returnedBlog.title}' added on server`
-      );
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-    })
-  .catch((error) => {
-    console.log(error)
-    setErrorMessage('Title and url are required')
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
-
-  })
-
-}
   return (
 
     
@@ -177,21 +177,21 @@ const addBlog =(event) => {
       <ErrorNotification message={errorMessage}></ErrorNotification>
       <Notification message={message}></Notification>
     
-       <h2>Login</h2>
-       {user === null ? 
-          loginForm() :
-          <div>
-            <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-            <h2>add new blog</h2>
-            {blogForm()}
+      <h2>Login</h2>
+      {user === null ? 
+        loginForm() :
+        <div>
+          <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
+          <h2>add new blog</h2>
+          {blogForm()}
 
-            <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-          </div>
+          <h2>blogs</h2>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
+        </div>
           
-        }
+      }
       
     </div>
   )
