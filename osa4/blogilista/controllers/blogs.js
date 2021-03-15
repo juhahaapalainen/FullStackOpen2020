@@ -23,7 +23,14 @@ blogsRouter.post('/', userExtractor, async(request, response) => {
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-  response.json(savedBlog.toJSON())
+
+  Blog.findOne({ _id: blog._id })
+    .populate('user',{ _id: 1, username: 1, name:1 })
+    .then(blg => {
+      response.json(blg.toJSON())
+    })
+
+  // response.json(savedBlog.toJSON())
 
 })
 
@@ -68,7 +75,15 @@ blogsRouter.put('/:id',async(request,response) => {
   }
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new:true })
-  response.json(updatedBlog)
+
+  Blog.findOne({ _id: updatedBlog._id })
+    .populate('user',{ _id: 1, username: 1, name:1 })
+    .then(blg => {
+      response.json(blg.toJSON())
+    })
+
+
+  // response.json(updatedBlog)
 
 })
 
