@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 // import Togglable from './Togglable'
 
-const Blog = ({blog}) => {
+const Blog = ({blog, makeLike}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -24,8 +24,22 @@ const Blog = ({blog}) => {
       setShowAll(false)
       setButtonName('show')
     }
-    
   } 
+
+  const addLike = (event) => {
+    event.preventDefault()
+    const updatedLikes = blog.likes + 1
+
+    const updatedObject = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      user: blog.user._id,
+      likes: updatedLikes, 
+    }
+    makeLike(updatedObject, blog.id)
+    
+  }
 
   return (
 
@@ -37,7 +51,8 @@ const Blog = ({blog}) => {
       
       <div style={show}>
         <div>{blog.url}</div>
-        <div>{blog.likes} <button>like</button> </div>
+        <div>{blog.likes} <button onClick={addLike}>like</button> </div>
+        {console.log('usrname',blog.user.name)}
         <div>{blog.user.name}</div>       
       </div>
     </div>

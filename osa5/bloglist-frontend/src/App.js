@@ -108,6 +108,7 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
+        console.log('addista',returnedBlog)
         setBlogs(blogs.concat(returnedBlog))
         //setBlogFormVisible(false)
         blogFormRef.current.toggleVisibility()
@@ -127,6 +128,18 @@ const App = () => {
 
       })
 
+  }
+
+  const addLike = (blogObject, idToUpdate) => {
+
+    console.log('Lisaalike:', blogObject)
+    console.log('id:', idToUpdate)
+    blogService
+      .update(idToUpdate, blogObject)
+      .then(returnedBlog => {
+        console.log('rtrn' ,returnedBlog)
+        setBlogs(blogs.map(blg => blg.id !== idToUpdate ? blg : returnedBlog))
+      })
   }
 
   const blogForm = () => {
@@ -150,7 +163,8 @@ const App = () => {
       
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+        
+          <Blog key={blog.id} blog={blog} makeLike={addLike}/>
         )}
       </div>
     )
