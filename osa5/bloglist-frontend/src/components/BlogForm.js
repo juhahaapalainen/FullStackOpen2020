@@ -19,8 +19,6 @@ const BlogForm = ({createBlog}) => {
     setNewAuthor('')
     setNewUrl('')
   }
-
-
   
   return(
     <div>

@@ -144,6 +144,18 @@ const App = () => {
     )
   }
 
+  const blogList = () => {
+
+    return(
+      
+      <div>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </div>
+    )
+  }
+
   return (
 
     
@@ -158,14 +170,14 @@ const App = () => {
           <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
             
           {blogForm()}
-          <h2>blogs</h2>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
-          )}
+          
+         
         </div>
           
       }
       
+      <h2>blogs</h2>
+      {blogList()}
     </div>
   )
 }
