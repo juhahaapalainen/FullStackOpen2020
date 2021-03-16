@@ -17,6 +17,7 @@ const App = () => {
   const [message, setMessage] = useState(null)
   // const [blogFormVisible, setBlogFormVisible] = useState(false)  
   const blogFormRef = useRef()
+  
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -47,6 +48,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+     
       setMessage(
         'Login succesfull'
       )
@@ -68,6 +70,7 @@ const App = () => {
     setUser(null)
     setUsername('')
     setPassword('')
+    
     setMessage(
       'Logout succesfull'
     )
@@ -137,15 +140,41 @@ const App = () => {
     blogService
       .update(idToUpdate, blogObject)
       .then(returnedBlog => {
-        console.log('rtrn' ,returnedBlog)
+        // console.log('rtrn' ,returnedBlog)
         setBlogs(blogs.map(blg => blg.id !== idToUpdate ? blg : returnedBlog))
       })
   }
 
-  const blogForm = () => {
-    // const hideWhenVisible = { display: blogFormVisible ? 'none' : '' }
-    // const showWhenVisible = { display: blogFormVisible ? '' : 'none' }
+  const deleleteBlog = (blogToDelete) => {
 
+    // console.log('delete:', blogToDelete.id)
+    
+    var areUSure = confirm(`Remove blog ${blogToDelete.title}?`)
+    if(areUSure) {
+      blogService
+        .delBlog(blogToDelete.id)
+        .then(setBlogs(blogs.filter((blg) => blg.id !== blogToDelete.id)))
+        .catch((error) => {
+          console.log(error)
+          setErrorMessage('Error deleting blog')
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+  
+        })
+      setMessage(
+        `Blog '${blogToDelete.title}' removed from server`
+      )
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  
+    
+  }
+
+  const blogForm = () => {
+   
     return (
       
       <Togglable buttonLabel='new blog' ref={blogFormRef}>
@@ -153,24 +182,25 @@ const App = () => {
           createBlog = {addBlog}
         />
       </Togglable>
-
     )
   }
 
   const blogList = () => {
 
     return(
-      
       <div>
-        {blogs
-          .sort((a, b) => a.likes < b.likes ? 1 : -1)
+        {sortedBlogs
+          
           .map(blog =>
         
-            <Blog key={blog.id} blog={blog} makeLike={addLike}/>
+            <Blog key={blog.id} blog={blog} makeLike={addLike} delBlog = {deleleteBlog}/>
           )}
       </div>
     )
   }
+
+  const sortedBlogs = [].concat(blogs)
+    .sort((a, b) => a.likes < b.likes ? 1 : -1)
 
   return (
 

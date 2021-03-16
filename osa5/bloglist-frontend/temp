@@ -1,0 +1,21 @@
+<div>
+      
+      {
+        blog
+          .sort((a,b) => a.likes > b.likes)
+          .map(blg => {
+            <div style={blogStyle}>
+              {blg.title} {blg.author}
+              <button onClick={handleButton}>{buttonName}</button>
+            
+              <div style={show}>
+                <div>{blg.url}</div>
+                <div>{blg.likes} <button onClick={addLike}>like</button> </div>
+              
+                <div>{blg.user.name}</div>       
+              </div>
+            </div>
+          })
+      }
+         
+    </div>
