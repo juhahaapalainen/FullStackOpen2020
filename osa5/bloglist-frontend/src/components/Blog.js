@@ -44,21 +44,14 @@ const Blog = ({blog, makeLike}) => {
   return (
 
     <div style={blogStyle}>
-      
-      
       {blog.title} {blog.author}
       <button onClick={handleButton}>{buttonName}</button>
-      
       <div style={show}>
         <div>{blog.url}</div>
         <div>{blog.likes} <button onClick={addLike}>like</button> </div>
-        {console.log('usrname',blog.user.name)}
         <div>{blog.user.name}</div>       
       </div>
     </div>
-
-
-    
   )
 }
 export default Blog
