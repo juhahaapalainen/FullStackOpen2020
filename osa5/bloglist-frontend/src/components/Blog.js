@@ -8,7 +8,7 @@ const Blog = React.forwardRef((props, ref) => {
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
+    marginBottom: 5,
   }
   const user =  JSON.parse(window.localStorage.getItem('loggedUser'))
   const [showAll, setShowAll] = useState(false) 
@@ -61,8 +61,8 @@ const Blog = React.forwardRef((props, ref) => {
   const removeBlog = (event) => {
     event.preventDefault()
     setShowDelete(user?.name === props.blog?.user?.name)
-
-    props.delBlog(props.blog.id)
+    console.log('del propsblog',props.blog.id)
+    props.delBlog(props.blog)
   }
 
   
@@ -75,7 +75,7 @@ const Blog = React.forwardRef((props, ref) => {
       <button onClick={handleButton}>{buttonName}</button>
       <div style={show} className='togglableContent'>
         <div>{props.blog.url}</div>
-        <div>{props.blog.likes} <button onClick={addLike}>like</button> </div>
+        <div>{props.blog.likes} <button id={props.blog.title} onClick={addLike}>like</button> </div>
         <div>{props.blog?.user?.name}</div>   
         <div style = {deleteVisible}>
           

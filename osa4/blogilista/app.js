@@ -11,6 +11,7 @@ const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
 logger.info('connecting to ', config.MONGODB_URI)
+logger.info('node_env', process.env.NODE_ENV)
 mongoose
   .connect(config.MONGODB_URI, {
     useNewUrlParser: true,
@@ -35,6 +36,12 @@ app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRoute)
 app.use('/api/login', loginRoute)
+
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  logger.info('api/testingissa')
+  app.use('/api/testing', testingRouter)
+}
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 

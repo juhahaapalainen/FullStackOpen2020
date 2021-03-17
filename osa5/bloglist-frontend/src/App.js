@@ -85,6 +85,7 @@ const App = () => {
     username
         <input
           type="text"
+          id='username'
           value={username}
           name="Username"
           onChange={({ target }) => setUsername(target.value)}
@@ -94,6 +95,7 @@ const App = () => {
     password
         <input
           type="password"
+          id='password'
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
@@ -147,28 +149,28 @@ const App = () => {
 
   const deleleteBlog = (blogToDelete) => {
 
-    // console.log('delete:', blogToDelete.id)
+    console.log('delete:', blogToDelete)
     
-    var areUSure = confirm(`Remove blog ${blogToDelete.title}?`)
-    if(areUSure) {
-      blogService
-        .delBlog(blogToDelete.id)
-        .then(setBlogs(blogs.filter((blg) => blg.id !== blogToDelete.id)))
-        .catch((error) => {
-          console.log(error)
-          setErrorMessage('Error deleting blog')
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
+    // var areUSure = confirm(`Remove blog ${blogToDelete.title}?`)
+    // if(areUSure) {
+    blogService
+      .delBlog(blogToDelete.id)
+      .then(setBlogs(blogs.filter((blg) => blg.id !== blogToDelete.id)))
+      .catch((error) => {
+        console.log(error)
+        setErrorMessage('Error deleting blog')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
   
-        })
-      setMessage(
-        `Blog '${blogToDelete.title}' removed from server`
-      )
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    }
+      })
+    setMessage(
+      `Blog '${blogToDelete.title}' removed from server`
+    )
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+    // }
   
     
   }

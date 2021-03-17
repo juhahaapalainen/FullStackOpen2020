@@ -3,7 +3,8 @@ module.exports = {
     'browser': true,
     'es2021': true,
     'mocha': true,
-    'jest': true
+    'jest': true,
+    'cypress/globals': true
   },
   'extends': [
     'eslint:recommended',
@@ -17,7 +18,7 @@ module.exports = {
     'sourceType': 'module'
   },
   'plugins': [
-    'react'
+    'react', 'jest', 'cypress'
   ],
   'rules': {
     'indent': ['error',2],
