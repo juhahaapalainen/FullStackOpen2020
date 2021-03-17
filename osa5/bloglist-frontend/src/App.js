@@ -17,7 +17,7 @@ const App = () => {
   const [message, setMessage] = useState(null)
   // const [blogFormVisible, setBlogFormVisible] = useState(false)  
   const blogFormRef = useRef()
-  
+  const blogRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -48,7 +48,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-     
+      blogRef.current.setDel()
       setMessage(
         'Login succesfull'
       )
@@ -70,7 +70,7 @@ const App = () => {
     setUser(null)
     setUsername('')
     setPassword('')
-    
+    blogRef.current.setDel()
     setMessage(
       'Logout succesfull'
     )
@@ -187,16 +187,18 @@ const App = () => {
 
   const blogList = () => {
 
+  
     return(
       <div>
         {sortedBlogs
           
           .map(blog =>
         
-            <Blog key={blog.id} blog={blog} makeLike={addLike} delBlog = {deleleteBlog}/>
+            <Blog key={blog.id} blog={blog} makeLike={addLike} delBlog = {deleleteBlog} ref={blogRef}/>
           )}
       </div>
     )
+    
   }
 
   const sortedBlogs = [].concat(blogs)
@@ -223,6 +225,7 @@ const App = () => {
       }
       
       <h2>blogs</h2>
+      
       {blogList()}
     </div>
   )
