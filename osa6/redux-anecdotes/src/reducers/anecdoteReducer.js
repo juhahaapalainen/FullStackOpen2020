@@ -1,3 +1,5 @@
+import anecdoteService from '../services/anecdotes'
+
 // const anecdotesAtStart = [
 //   'If it hurts, do it more often',
 //   'Adding manpower to a late software project makes it later!',
@@ -7,7 +9,7 @@
 //   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 // ]
 
-const getId = () => (100000 * Math.random()).toFixed(0)
+// const getId = () => (100000 * Math.random()).toFixed(0)
 
 // const asObject = (anecdote) => {
 //   return {
@@ -26,53 +28,59 @@ const anecdoteReducer = (state = [], action) => {
 
   switch(action.type) {
 
-    case 'INIT_ANECDOTES': {
-      return action.data
-    }
-    case 'VOTE' : {
-      
-      const id = action.data.id
-      // console.log('vote id', id)
-      const anecdoteToChange = state.find(a => a.id === id)
-      // console.log('UNDEF?', anecdoteToChange)
-      const changedAnecdote = {
-          ...anecdoteToChange,
-          votes: anecdoteToChange.votes + 1
-      }
-      // console.log(changedAnecdote)
+  case 'INIT_ANECDOTES': {
+    return action.data
+  }
+  case 'VOTE' : {
 
-      return state.map(anec => anec.id !== id ? anec : changedAnecdote)
+    const id = action.data.id
+    // console.log('vote id', id)
+    const anecdoteToChange = state.find(a => a.id === id)
+    // console.log('UNDEF?', anecdoteToChange)
+    const changedAnecdote = {
+      ...anecdoteToChange,
+      votes: anecdoteToChange.votes + 1
     }
+    // console.log(changedAnecdote)
 
-    case 'NEW' : {
-      return [...state, action.data]
-    }
-    
-    default:
-      return state
+    return state.map(anec => anec.id !== id ? anec : changedAnecdote)
   }
 
-  
+  case 'NEW' : {
+    return [...state, action.data]
+  }
+
+  default:
+    return state
+  }
+
+
 }
 
 export const vote = (id) => {
-  return   { 
-      type: 'VOTE',
-      data: { id: id }
+  return   {
+    type: 'VOTE',
+    data: { id: id }
   }
 }
 
-export const createAnecdote = (content) => {
-  return{
-    type: 'NEW',
-    data: content
+export const createAnecdote = content => {
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.createNew(content)
+    dispatch({
+      type: 'NEW',
+      data: newAnecdote,
+    })
   }
-} 
+}
 
-export const initializeAnecdotes = (anecdotes) => {
-  return {
-    type: 'INIT_ANECDOTES',
-    data: anecdotes,
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({
+      type: 'INIT_ANECDOTES',
+      data: anecdotes,
+    })
   }
 }
 
