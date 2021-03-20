@@ -17,7 +17,7 @@ const App = () => {
   const [message, setMessage] = useState(null)
   // const [blogFormVisible, setBlogFormVisible] = useState(false)  
   const blogFormRef = useRef()
-  const blogRef = useRef()
+  
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -48,7 +48,6 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      blogRef.current.setDel()
       setMessage(
         'Login succesfull'
       )
@@ -70,7 +69,6 @@ const App = () => {
     setUser(null)
     setUsername('')
     setPassword('')
-    blogRef.current.setDel()
     setMessage(
       'Logout succesfull'
     )
@@ -149,28 +147,28 @@ const App = () => {
 
   const deleleteBlog = (blogToDelete) => {
 
-    console.log('delete:', blogToDelete)
+    // console.log('delete:', blogToDelete)
     
-    // var areUSure = confirm(`Remove blog ${blogToDelete.title}?`)
-    // if(areUSure) {
-    blogService
-      .delBlog(blogToDelete.id)
-      .then(setBlogs(blogs.filter((blg) => blg.id !== blogToDelete.id)))
-      .catch((error) => {
-        console.log(error)
-        setErrorMessage('Error deleting blog')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+    var areUSure = confirm(`Remove blog ${blogToDelete.title}?`)
+    if(areUSure) {
+      blogService
+        .delBlog(blogToDelete.id)
+        .then(setBlogs(blogs.filter((blg) => blg.id !== blogToDelete.id)))
+        .catch((error) => {
+          console.log(error)
+          setErrorMessage('Error deleting blog')
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
   
-      })
-    setMessage(
-      `Blog '${blogToDelete.title}' removed from server`
-    )
-    setTimeout(() => {
-      setMessage(null)
-    }, 5000)
-    // }
+        })
+      setMessage(
+        `Blog '${blogToDelete.title}' removed from server`
+      )
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
   
     
   }
@@ -189,18 +187,16 @@ const App = () => {
 
   const blogList = () => {
 
-  
     return(
       <div>
         {sortedBlogs
           
           .map(blog =>
         
-            <Blog key={blog.id} blog={blog} makeLike={addLike} delBlog = {deleleteBlog} ref={blogRef}/>
+            <Blog key={blog.id} blog={blog} makeLike={addLike} delBlog = {deleleteBlog} user={user}/>
           )}
       </div>
-    )
-    
+    )  
   }
 
   const sortedBlogs = [].concat(blogs)
@@ -212,23 +208,16 @@ const App = () => {
     <div>
       <ErrorNotification message={errorMessage}></ErrorNotification>
       <Notification message={message}></Notification>
-    
       <h2>Login</h2>
       {user === null ? 
         loginForm() :
         <div>
-          <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-            
+          <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>  
           {blogForm()}
-          
-         
-        </div>
-          
+        </div>   
       }
-      
       <h2>blogs</h2>
-      
-      {blogList()}
+      {blogList()}  
     </div>
   )
 }
