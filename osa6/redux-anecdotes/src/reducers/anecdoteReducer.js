@@ -53,14 +53,19 @@ const anecdoteReducer = (state = [], action) => {
   default:
     return state
   }
-
-
 }
 
-export const vote = (id) => {
-  return   {
-    type: 'VOTE',
-    data: { id: id }
+export const vote = (id, anecdoteToChange) => {
+  return async dispatch => {
+    const changedAnecdote = {
+      ...anecdoteToChange,
+      votes: anecdoteToChange.votes + 1
+    }
+    await anecdoteService.createVote(id, changedAnecdote)
+    dispatch({
+      type: 'VOTE',
+      data: { id: id }
+    })
   }
 }
 
@@ -83,5 +88,7 @@ export const initializeAnecdotes = () => {
     })
   }
 }
+
+
 
 export default anecdoteReducer

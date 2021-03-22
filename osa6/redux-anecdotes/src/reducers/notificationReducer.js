@@ -6,7 +6,7 @@ const notificationReducer = (state = null, action) => {
   switch(action.type) {
 
   case 'MSG': {
-    // console.log('MSGsta', action.data)
+    console.log('MSGsta', action.data)
     return state = action.data
   }
   case 'RMV': {
@@ -16,11 +16,9 @@ const notificationReducer = (state = null, action) => {
   default:
     return state
   }
-
-
 }
 
-export const setNotification = message => {
+export const showNotification = message => {
   return{
     type: 'MSG',
     data: message
@@ -30,6 +28,16 @@ export const setNotification = message => {
 export const removeNotification = () => {
   return {
     type: 'RMV'
+  }
+}
+
+export const setNotification = (message, time) => {
+
+  return dispatch => {
+    dispatch(showNotification(message))
+    setTimeout(() => {
+      dispatch(removeNotification())
+    }, time*1000)
   }
 }
 
