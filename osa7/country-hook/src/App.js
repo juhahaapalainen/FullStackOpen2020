@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 
 const useField = (type) => {
@@ -15,20 +15,26 @@ const useField = (type) => {
   }
 }
 
-const useCountry = async(name) => {
+const useCountry = (name) => {
   const [country, setCountry] = useState(null)
-
+  
   useEffect(() => {
-    axios.get('https://restcountries.eu/rest/v2/name/eesti')
-    .then(response => {
-      console.log(response.data)
-      setCountry(response.data.name)
-    })
-    .catch((error) => console.log(error))
-    // setCountry(promise.data)
-    console.log(country)
+    if(name) {
+      axios.get(`https://restcountries.eu/rest/v2/name/${name}?fullText=true`)
+    
+      .then(response => {
+        console.log(response)
+        setCountry({found: true, data: response.data[0]})
+        
+      })
+      .catch((error) => {
+        console.log(error)
+        setCountry({found: false, data:{}})
+      })
+    } 
+    
   },[name])
-
+ 
   return country
 }
 
@@ -38,9 +44,12 @@ const Country = ({ country }) => {
   }
 
   if (!country.found) {
+    console.log(country)
+    console.log(country.found)
     return (
       <div>
         not found...
+        
       </div>
     )
   }
