@@ -1,12 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import {Link} from 'react-router-dom'
 // import {createBlog } from '../reducers/blogReducer'
 
 const User = (user) => {
   console.log(user.user.username)
   return (
     <tr>
-      <td>{user.user.username}</td> 
+      <td><Link to={`/users/${user.user.id}`}> {user.user.username}</Link>  </td> 
       <td>{user.user.blogs.length}</td>
     </tr>
   )
@@ -19,13 +20,13 @@ const Users = () => {
   
   //   console.log(users)
   return(
-    <div>
+    <div className = 'container'>
       <h1>Users</h1>
-      <table>
+      <table className='table'>
         <tbody>
           <tr>
             <th>Nimi</th>
-            <th>Blogei</th>
+            <th>Blogeja</th>
           </tr>
 
           {users.map(usr => 

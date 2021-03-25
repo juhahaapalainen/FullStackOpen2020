@@ -2,53 +2,44 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-// import {createBlog } from '../reducers/blogReducer'
-
 const UsersBlogs = (user) => {
 
-  console.log('USR', user.user.blogs)
+  // console.log('USR', user.user.blogs)
   return(
     <div>
-      {  }
+      { user.user.blogs.map(blg =>
+        <li className='list-group-item' key={blg.id}> {blg.title}</li>) }
     </div>
   )
 }
 
 const User = () => {
     
-  //   const dispatch = useDispatch()
   const users = useSelector(state => state.allUsers)
   const id = useParams().id
-  console.log('user:' ,id)
+  // console.log('user:' ,id)
   const userFound = users.find(usr => usr.id === (id))
   //   console.log('USER:' ,userFound)
   //   console.log('USERNAME:' ,user.username)
+  if(!userFound) {
+    return null
+  }
   return(
-    <div>
-      <h1>USER</h1>
+    <div className='container'>
       {(userFound) ?
-        <div>{userFound.name}
-          <UsersBlogs
-            user={userFound}/>
+        <div><h1>{userFound.name}</h1>
+          <h2>added blogs</h2>
+          <ul className='list-group'>
+            <UsersBlogs
+              user={userFound}/>
+          </ul>
+          
         </div> 
         :
         <div></div>
-     
-
-      }
-      
-      
-
-      
+      } 
     </div>
   )
 }
 
 export default User
-
-// {user.map(usr => 
-//     <UsersBlogs
-//       key ={usr.id}
-//       user = {usr}
-//     />)
-//   }
