@@ -2,19 +2,19 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 const Notification = () => {
 
-  const message = useSelector(state => state.notification)
-
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1
+  const message = useSelector(state => state.notification[0])
+  const error = useSelector(state => state.notification[1])
+  let clsname = 'alert alert-success'
+  if(error === true) {
+    clsname = 'alert alert-danger'
   }
+  
   return (
     <div>
       {
         message === null ?
           null :
-          <div style={style}>{message}</div>
+          <div className={clsname}>{message}</div>
       }
     </div>
   )

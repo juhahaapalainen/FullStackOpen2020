@@ -27,6 +27,4 @@ export const initializeUsers = () => {
   }
 }
 
-
-
 export default allUsersReducer

@@ -15,6 +15,7 @@ import User from './components/User'
 import Blog from './components/Blog'
 import Nav from './components/Nav'
 import Login from './components/Login'
+import { initializeUser } from './reducers/userReducer'
 
 const App = () => {
   
@@ -25,6 +26,7 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeBlogs())
     dispatch(initializeUsers())
+    dispatch(initializeUser())
   },[dispatch])
 
   const blogForm = () => {
@@ -41,21 +43,17 @@ const App = () => {
     <div className='conainer'>
       <Router>
         <Nav></Nav>
+        <Notification></Notification>
         <Switch>
-          <Route path="/users/:id">
-            <Notification></Notification>
-          
+          <Route path="/users/:id">      
             <User></User>
           </Route>
-          <Route path="/blogs/:id">
-            <Notification></Notification>
-         
+
+          <Route path="/blogs/:id">    
             <Blog></Blog>
           </Route>
-        
-          <Route path = '/users'>
-            <Notification></Notification>
-          
+
+          <Route path = '/users'>        
             <Users></Users>
           </Route>
 
@@ -64,12 +62,10 @@ const App = () => {
           </Route>
 
           <Route path='/'>
-            <Notification></Notification>
             {user ? 
               blogForm() :
               null
             }
-            
             <BlogList></BlogList>
           </Route>
 

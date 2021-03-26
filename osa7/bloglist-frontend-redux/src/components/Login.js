@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import {userLogin} from '../reducers/userReducer'
-import {setNotification} from '../reducers/notificationReducer'
+// import {setNotification} from '../reducers/notificationReducer'
 import {Form, Button } from 'react-bootstrap'
 
 const Login = () => {
@@ -13,16 +13,13 @@ const Login = () => {
 
   const onSubmit = (event) => {
     event.preventDefault()
-    try {
-      dispatch(userLogin(username, password))
-      setUsername('')
-      setPassword('')
-      dispatch(setNotification('Login succesfull', 5))
-      
-    } catch (exception) {
-      dispatch(setNotification('wrong username or password', 5))
-    }
-    history.push('/')
+   
+    
+    dispatch(userLogin(username, password, history))
+    setUsername('')
+    setPassword('')
+    
+    // history.push('/')
   }
   
   return (

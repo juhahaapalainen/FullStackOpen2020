@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { useDispatch } from 'react-redux'
 import {createBlog } from '../reducers/blogReducer'
 import {Form, Button } from 'react-bootstrap'
-
+// import { setNotification } from '../reducers/notificationReducer'
 const BlogForm = () => {
     
   const [newTitle, setNewTitle] = useState('')
@@ -22,7 +22,11 @@ const BlogForm = () => {
           
     })
 
+    
     dispatch(createBlog(content))
+     
+    
+    
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')

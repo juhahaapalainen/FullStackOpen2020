@@ -1,10 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import {Link} from 'react-router-dom'
-// import {createBlog } from '../reducers/blogReducer'
+
 
 const User = (user) => {
-  console.log(user.user.username)
+  // console.log(user.user.username)
   return (
     <tr>
       <td><Link to={`/users/${user.user.id}`}> {user.user.username}</Link>  </td> 
@@ -15,9 +15,7 @@ const User = (user) => {
 
 const Users = () => {
     
-  //   const dispatch = useDispatch()
   const users = useSelector(state => state.allUsers)
-  
   //   console.log(users)
   return(
     <div className = 'container'>
@@ -37,8 +35,6 @@ const Users = () => {
           }
         </tbody>
       </table>
-
-      
     </div>
   )
 }
