@@ -170,7 +170,8 @@ const resolvers = {
 
     editAuthor:(root, args) => {
       const editedAuthor = authors.find(a => a.name === args.name)
-
+      console.log('edit author', editedAuthor)
+      console.log('edit authors born', args.setBornTo)
       if(!editedAuthor) {
         return null
       }

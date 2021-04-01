@@ -21,8 +21,8 @@ const blogSchema = mongoose.Schema({
     ref: 'User'
   },
   comments: {
-    type: [String],
-    notEmpty: [true, 'Too short comment']
+    type: [{ type: String, notEmpty:[true,'Too short comment' ] }]
+
   }
 })
 
