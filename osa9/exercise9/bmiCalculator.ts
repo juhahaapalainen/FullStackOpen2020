@@ -1,6 +1,6 @@
 interface Measurements {
     height: number,
-    mass: number
+    weight: number
 }
 
 const parseArguments = (args: Array<String>): Measurements => {
@@ -10,16 +10,16 @@ const parseArguments = (args: Array<String>): Measurements => {
     if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
         return {
           height: Number(args[2]),
-          mass: Number(args[3])
+          weight: Number(args[3])
         }
       } else {
         throw new Error('Provided values needs to be numbers!');
       }
 }
 
-const calculateBmi = (height: number, mass: number) : string => {
+export const calculateBmi = (height: number, weight: number) : string => {
     if(height === 0) throw new Error('Divided by 0')
-    const bmi = (mass/((height/100)*(height/100))) 
+    const bmi = (weight/((height/100)*(height/100))) 
 
     if(bmi < 15) {
         return 'Very severely underweight'
@@ -48,8 +48,9 @@ const calculateBmi = (height: number, mass: number) : string => {
 }
 
 try {
-    const {height, mass} = parseArguments(process.argv)
-    console.log(calculateBmi(height,mass))
+    const {height, weight} = parseArguments(process.argv)
+    console.log(calculateBmi(height,weight))
 }catch(error) {
     console.log('Error:', error.message)
 }
+
