@@ -18,16 +18,18 @@ router.post('/', (req, res) => {
   }catch(error){
     res.status(400).send(error.message);
   }
-  // const {name, dateOfBirth, gender, occupation, ssn} = req.body;
-  // const newPatient = patientService.addPatient({
-  //   name, 
-  //   dateOfBirth, 
-  //   gender, 
-  //   occupation,
-  //   ssn
-  // });
+  
+  
+});
 
-  // res.json(newPatient);
+router.get("/:id", (req, res) => {
+  try {
+    const patient = patientService.getPatient(req.params.id);
+    res.json(patient);
+  } catch (error) {
+    const message = (error as Error).message;
+    res.status(404).send({ error: message });
+  }
 });
 
 export default router;
