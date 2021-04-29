@@ -1,11 +1,11 @@
-const { ApolloServer, gql, AuthenticationError } = require('apollo-server')
+const { ApolloServer, gql, AuthenticationError, UserInputError } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 require('dotenv').config()
 const Book = require('./models/book')
 const Author = require('./models/author')
 const jwt = require('jsonwebtoken')
-
+const User = require('./models/user')
 const MONGODB_URI = process.env.MONGODB_URI
 const JWT_SECRET = process.env.SECRET
 
@@ -87,32 +87,36 @@ const resolvers = {
             {author: { $in: foundAuthor.id}},
             {genres: { $in: args.genre}}
           ]
-        })
+        }).populate('author')
       }
        else if(args.author && !args.genre) {
         const foundAuthor = await Author.findOne({name: args.author})
         return await Book.find({  
           author: { $in: foundAuthor.id}
-        })
+        }).populate('author')
      
       }
       else if(args.genre && !args.author) {       
         return await Book.find({  
           genres: { $in: args.genre}
-        })
+        }).populate('author')
       }
        else {
-        return await Book.find({})
+        return await Book.find({}).populate('author')
        } 
     },
-    allAuthors: () => Author.find({}),
+    allAuthors: () => {
+      return Author.find({})
+    
+    },
     me: (root, args, context) => {
       return context.currentUser
     },
   },
   Author: {
-    
-    bookCount:(root) => books.filter(book => book.author === root.name).length
+    bookCount: (root) => {
+      return Book.countDocuments({author: root})
+    }
   },
   
 
@@ -127,7 +131,7 @@ const resolvers = {
 
       const bookAlreadyMade = await Book.findOne({title: args.title})
 
-      if(!bookAlreadyMade) {
+      if(bookAlreadyMade) {
         throw new UserInputError('Book must be unique', {
           invalidArgs: args.title,
           
@@ -188,7 +192,7 @@ const resolvers = {
     },
 
     createUser: (root, args) => {
-      const user = new User({ username: args.username })
+      const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
   
       return user.save()
         .catch(error => {
