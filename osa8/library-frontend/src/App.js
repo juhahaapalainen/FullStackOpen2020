@@ -1,10 +1,14 @@
-import { useApolloClient } from '@apollo/client'
-import React, { useState } from 'react'
+import {
+  useSubscription, useApolloClient
+} from '@apollo/client'
+import React, { useEffect, useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import Login from './components/Login'
 import NewBook from './components/NewBook'
 import RecommendedBooks from './components/RecommendedBooks'
+import  {ALL_BOOKS, BOOK_ADDED} from './quories'
+
 
 const Notify =({errorMessage}) => {
   if(!errorMessage) {
@@ -22,6 +26,41 @@ const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient()
   const [errorMessage, setErrorMessage] = useState(null)
+
+  useEffect(() => {
+    const loggedUSer = localStorage.getItem('libusertoken')
+    if(loggedUSer) {
+      setToken(loggedUSer)
+    }
+  }, [setToken])
+
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => {
+      set.map(p => p.id).includes(object.id)  
+    }
+    // console.log('UPDATECACHE')
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    // console.log('DATAINSTORE:', dataInStore.allBooks)
+
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      // console.log('paivitetaan')
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }   
+  }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({subscriptionData}) => {
+      // console.log('USINGSUBSCRIPTION!')
+      console.log(subscriptionData)
+      const addedBook = subscriptionData.data.bookAdded
+      window.alert(`Book added: ${addedBook.title}`)
+      // console.log('ADDEDBOOK', addedBook)
+      updateCacheWith(addedBook)
+    }
+  })
 
   const logout = () => {
     setToken(null)
