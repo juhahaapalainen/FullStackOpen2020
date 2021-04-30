@@ -112,7 +112,7 @@ const resolvers = {
        } 
     },
     allAuthors: () => {
-      return Author.find({})
+      return Author.find({}).populate('books')
     
     },
     me: (root, args, context) => {
