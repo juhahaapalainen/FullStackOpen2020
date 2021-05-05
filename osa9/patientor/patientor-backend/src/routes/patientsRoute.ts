@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import express from 'express';
 import patientService from '../services/patientService';
-import toNewPatient from '../utils';
+import toNewPatient, { toNewEntry } from '../utils';
 
 const router = express.Router();
 
@@ -30,6 +30,19 @@ router.get("/:id", (req, res) => {
     const message = (error as Error).message;
     res.status(404).send({ error: message });
   }
+});
+
+router.post('/:id/entries', (req, res) => {
+
+  try{
+    const newEntry = toNewEntry(req.body);
+    console.log(newEntry);
+    
+  }catch(error){
+    res.status(400).send(error.message);
+  }
+  
+  
 });
 
 export default router;

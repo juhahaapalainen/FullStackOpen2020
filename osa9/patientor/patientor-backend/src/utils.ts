@@ -1,4 +1,9 @@
-import {Gender, NewPatient} from './types';
+/*  eslint-disable @typescript-eslint/no-explicit-any */
+import {Discharge, EntryType, Gender, HealthCheckRating, NewBaseEntry, NewEntry, NewPatient, SickLeave} from './types';
+
+export const assertNever = (value: never): never => {
+  throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
+};
 
 const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
@@ -65,6 +70,91 @@ const toNewPatient = ({ name, dateOfBirth, gender, occupation, ssn } : Fields): 
     };
   
     return newPatient;
-  };
+};
 
-  export default toNewPatient;
+const parseEntryType = (entryType: any): EntryType => {
+  if(!Object.values(EntryType).includes(entryType)) {
+    throw new Error(`Wrong or missing type ${entryType || ""}`);
+  }
+  return entryType;
+};
+
+const parseToString = (param: any, paramName: string): string => {
+  if(!param || !isString(param)) {
+    throw new Error(`Wrong or missing ${paramName || ""}`);
+  }
+  return param;
+};
+
+const parseHealthCheckRating = (hCRating: any): HealthCheckRating => {
+
+  if( hCRating === null || hCRating === undefined
+    || isHealthCheckRating(hCRating)) {
+    throw new Error(`Wrong or missing healthcheckrating ${hCRating ||""}`);
+  }
+
+  return hCRating;
+};
+
+const isHealthCheckRating = (param: any): param is HealthCheckRating => {
+  return Object.values(HealthCheckRating).includes(param);
+};
+
+const toNewBaseEntry = (object: any): NewBaseEntry => {
+  const newBaseEntry:NewBaseEntry = {
+    type: parseEntryType(object.type),
+    description: parseToString(object.description, "description"),
+    date: parseDate(object.date),
+    specialist: parseToString(object.specialist, "specialist"),
+  }; 
+
+  return newBaseEntry;
+};
+
+const parseSickLeave = (object: any): SickLeave => {
+  if(!object) throw new Error("Missing sickleave");
+
+  return {
+    startDate: parseDate(object.startDate),
+    endDate: parseDate(object.endDate)
+  };
+};
+
+const parseDischarge = (object: any): Discharge => {
+  if(!object) throw new Error("Missing sickleave");
+
+  return {
+    date: parseDate(object.date),
+    criteria: parseToString(object.criteria, "discharge")
+  };
+};
+
+export const toNewEntry = (object: any): NewEntry => {
+
+  const newBaseEntry = toNewBaseEntry(object) as NewEntry;
+
+  switch(newBaseEntry.type) {
+    case EntryType.HealthCheck:
+      return {
+        ...newBaseEntry,
+        healthCheckRating: parseHealthCheckRating(object.healthCheckRating)
+      };
+    case EntryType.OccupationalHealthcare:
+      const newEntry = {
+        ...newBaseEntry,
+        employerName: parseToString(object.employerName, "emplyername"),
+
+      };
+      if(object.sickLeave) {
+        newEntry.sickLeave= parseSickLeave(object.sickLeave);
+      }
+      return newEntry;
+    case EntryType.Hospital:
+      return {...newBaseEntry, discharge: parseDischarge(object.discharge)};
+    default:
+      return assertNever(newBaseEntry); 
+  }
+
+};
+
+export default toNewPatient;

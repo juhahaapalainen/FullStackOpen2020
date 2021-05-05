@@ -1,10 +1,11 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { setPatient, useStateValue } from "../state";
-import { Patient, Entry } from "../types";
+import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import axios from "axios";
-import { Header, Icon } from "semantic-ui-react";
+import { Card, Header, Icon } from "semantic-ui-react";
+import EntryDetails from "./EntryDetails";
 
 const PatientPage = () => {
 
@@ -50,15 +51,12 @@ console.log("Diagnoses:", diagnoses);
        <p>ssn: {patient?.ssn}</p> 
        <p>occupation: {patient?.occupation}</p>
        <Header size="medium">entries</Header>
-       {patient?.entries?.map((entry: Entry) => (
-         <div key={entry.id}>
-       <div >{entry.date} {entry.description}</div>
-       <div>{entry.diagnosisCodes?.map(code => 
-       <li key={code}>{code} {code && diagnoses[code].name}</li> )}</div>
-       </div>
+       <Card.Group>
+       {patient?.entries?.map((entry) => (
+         <EntryDetails key={entry.id} entry={entry}/>
        )
        )}
-       
+       </Card.Group>
     </div>
      
   );

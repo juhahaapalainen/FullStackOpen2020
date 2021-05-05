@@ -1,7 +1,13 @@
+/*  eslint-disable @typescript-eslint/no-explicit-any */
 export enum Gender {
     Male = 'male',
     Female = 'female',
     Other = 'other'
+}
+export enum EntryType {
+  HealthCheck = "HealthCheck",
+  OccupationalHealthcare = "OccupationalHealthCare",
+  Hospital = "Hospital",
 }
 
 export interface Diagnose {
@@ -17,6 +23,7 @@ export type Entry =
 
 interface BaseEntry {
   id: string;
+  type: EntryType,
   description: string;
   date: string;
   specialist: string;
@@ -40,19 +47,29 @@ export enum HealthCheckRating {
   "CriticalRisk" = 3
 }
 
+export interface SickLeave {
+  startDate: string,
+  endDate: string,
+}
+
+export interface Discharge {
+  date: string,
+  criteria: string,
+}
+
 interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
+  type: EntryType.HealthCheck;
   healthCheckRating: HealthCheckRating;
 }
 
 interface OccupationalHealthcareEntry extends BaseEntry {
-  type: "OccupationalHealthcare";
+  type: EntryType.OccupationalHealthcare;
   employerName: string;
   sickLeave?: { startDate: string, endDate: string }
 }
 
 interface HospitalEntry extends BaseEntry {
-  type: "Hospital";
+  type: EntryType.Hospital;
   discharge: {date: string, criteria: string}
 }
 
@@ -62,8 +79,16 @@ export interface Diagnosis {
   latin?: string;
 }
 
+
+
 export type NonSensitivePatients = Omit<Patient, 'ssn' | 'entries'>;
 
-
-
 export type NewPatient = Omit<Patient, 'id'>;
+
+export type NewBaseEntry = Omit<BaseEntry, "id">;
+
+type DistributiveOmit<T, K extends keyof any> = T extends any
+  ? Omit<T, K>
+  : never;
+
+export type NewEntry = DistributiveOmit<Entry, "id">;
