@@ -11,7 +11,7 @@ const PatientPage = () => {
     
     const [{ patient }, dispatch] = useStateValue();
     const { id } = useParams<{ id: string }>();
-    
+    const [{diagnoses}] = useStateValue();
 
     React.useEffect(() => { 
       const fetchPatient = async () => {
@@ -42,16 +42,19 @@ const PatientPage = () => {
       }
      };
      
-
+     
+console.log("Diagnoses:", diagnoses);
   return (
     <div>
         <Header size="large">{patient?.name} <Icon className={genderIcon()}></Icon></Header>
        <p>ssn: {patient?.ssn}</p> 
        <p>occupation: {patient?.occupation}</p>
+       <Header size="medium">entries</Header>
        {patient?.entries?.map((entry: Entry) => (
          <div key={entry.id}>
-       <div >{entry.date}</div>
-       <div>{entry.type}</div>
+       <div >{entry.date} {entry.description}</div>
+       <div>{entry.diagnosisCodes?.map(code => 
+       <li key={code}>{code} {code && diagnoses[code].name}</li> )}</div>
        </div>
        )
        )}
