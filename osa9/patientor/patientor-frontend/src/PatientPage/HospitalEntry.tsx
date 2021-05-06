@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Icon } from "semantic-ui-react";
 import {HospitalEntry as Hospital} from "../types";
 
+
 const HospitalEntry: React.FC<{entry: Hospital}> = ({entry}) => {
     console.log(entry);
     return (
@@ -12,6 +13,7 @@ const HospitalEntry: React.FC<{entry: Hospital}> = ({entry}) => {
                 
             </Card.Content>
         </Card>
+        
     );
 };
 

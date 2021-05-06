@@ -2,9 +2,9 @@ import diagnoseData from '../../data/diagnoses.json';
 import {Diagnose} from '../types';
 
 const getDiagnoses = ():Diagnose[] => {
-  return diagnoseData;
+    return diagnoseData;
 };
 
 export default {
-  getDiagnoses
+    getDiagnoses
 };
