@@ -5,8 +5,8 @@ import App from './App';
 import { reducer, StateProvider } from "./state";
 
 ReactDOM.render(
-  <StateProvider reducer={reducer}>
-    <App />
-  </StateProvider>,
-  document.getElementById('root')
+    <StateProvider reducer={reducer}>
+        <App />
+    </StateProvider>,
+    document.getElementById('root')
 );

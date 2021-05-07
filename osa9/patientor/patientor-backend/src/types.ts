@@ -6,7 +6,7 @@ export enum Gender {
 }
 export enum EntryType {
   HealthCheck = "HealthCheck",
-  OccupationalHealthcare = "OccupationalHealthCare",
+  OccupationalHealthcare = "OccupationalHealthcare",
   Hospital = "Hospital",
 }
 
@@ -65,12 +65,12 @@ interface HealthCheckEntry extends BaseEntry {
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: EntryType.OccupationalHealthcare;
   employerName: string;
-  sickLeave?: { startDate: string, endDate: string }
+  sickLeave?: SickLeave;
 }
 
 interface HospitalEntry extends BaseEntry {
   type: EntryType.Hospital;
-  discharge: {date: string, criteria: string}
+  discharge: Discharge;
 }
 
 export interface Diagnosis {
@@ -79,16 +79,18 @@ export interface Diagnosis {
   latin?: string;
 }
 
-
-
 export type NonSensitivePatients = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatient = Omit<Patient, 'id'>;
 
 export type NewBaseEntry = Omit<BaseEntry, "id">;
 
-type DistributiveOmit<T, K extends keyof any> = T extends any
-  ? Omit<T, K>
-  : never;
+// type DistributiveOmit<T, K extends keyof any> = T extends any
+//   ? Omit<T, K>
+//   : never;
 
-export type NewEntry = DistributiveOmit<Entry, "id">;
+// export type NewEntry = DistributiveOmit<Entry, "id">;
+export type NewEntry =
+  | Omit<HospitalEntry, "id">
+  | Omit<OccupationalHealthcareEntry, "id">
+  | Omit<HealthCheckEntry, "id">;

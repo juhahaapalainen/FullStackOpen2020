@@ -20,70 +20,70 @@ export type Action =
   };
 
 export const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
+    switch (action.type) {
     case "SET_PATIENT_LIST":
-      return {
-        ...state,
-        patients: {
-          ...action.payload.reduce(
-            (memo, patient) => ({ ...memo, [patient.id]: patient }),
-            {}
-          ),
-          ...state.patients
-        }
-      };
+        return {
+            ...state,
+            patients: {
+                ...action.payload.reduce(
+                    (memo, patient) => ({ ...memo, [patient.id]: patient }),
+                    {}
+                ),
+                ...state.patients
+            }
+        };
     case "ADD_PATIENT":
-      return {
-        ...state,
-        patients: {
-          ...state.patients,
-          [action.payload.id]: action.payload
-        }
-      };
-      case "SET_PATIENT":
-      return {
-        ...state,
-        patient: action.payload,
+        return {
+            ...state,
+            patients: {
+                ...state.patients,
+                [action.payload.id]: action.payload
+            }
+        };
+    case "SET_PATIENT":
+        return {
+            ...state,
+            patient: action.payload,
         
-      };
-      case "SET_DIAGNOSES":
-      return {
-        ...state,
-        diagnoses: {
-          ...action.payload.reduce(
-            (memo, diagnosis) => ({...memo, [diagnosis.code]:diagnosis}),{}
-          )
-        } 
+        };
+    case "SET_DIAGNOSES":
+        return {
+            ...state,
+            diagnoses: {
+                ...action.payload.reduce(
+                    (memo, diagnosis) => ({...memo, [diagnosis.code]:diagnosis}),{}
+                )
+            } 
         
-      };
+        };
     default:
-      return state;
-  }
+        return state;
+    }
 };
 
 export const setPatientList = (patientList: Patient[]): Action => {
-return {
-    type: "SET_PATIENT_LIST",
-    payload: patientList 
-  };
+    return {
+        type: "SET_PATIENT_LIST",
+        payload: patientList 
+    };
 };
 
 export const setPatient = (patient: Patient): Action => {
-return {
-    type: "SET_PATIENT",
-    payload: patient
-  };
+    return {
+        type: "SET_PATIENT",
+        payload: patient
+    };
 };
 
 export const addPatient = (patient: Patient): Action => {
-return {
-    type: "ADD_PATIENT",
-    payload: patient
-  };
+    return {
+        type: "ADD_PATIENT",
+        payload: patient
+    };
 };
 export const setDiagnoses = (diagnoses: Diagnosis[]): Action => {
-  return {
-      type: "SET_DIAGNOSES",
-      payload: diagnoses
+    return {
+        type: "SET_DIAGNOSES",
+        payload: diagnoses
     };
-  };
+};

@@ -10,14 +10,14 @@ export type State = {
 };
 
 const initialState: State = {
-  patients: {},
-  patient: null,
-  diagnoses: {},
+    patients: {},
+    patient: null,
+    diagnoses: {},
 };
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([
-  initialState,
-  () => initialState
+    initialState,
+    () => initialState
 ]);
 
 type StateProviderProps = {
@@ -26,14 +26,14 @@ type StateProviderProps = {
 };
 
 export const StateProvider: React.FC<StateProviderProps> = ({
-  reducer,
-  children
+    reducer,
+    children
 }: StateProviderProps) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  return (
-    <StateContext.Provider value={[state, dispatch]}>
-      {children}
-    </StateContext.Provider>
-  );
+    const [state, dispatch] = useReducer(reducer, initialState);
+    return (
+        <StateContext.Provider value={[state, dispatch]}>
+            {children}
+        </StateContext.Provider>
+    );
 };
 export const useStateValue = () => useContext(StateContext);
