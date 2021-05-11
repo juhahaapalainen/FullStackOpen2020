@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
-import { Input, List } from 'semantic-ui-react'
+import { Button, Input, List } from 'semantic-ui-react'
 import CountryDetails from './CountryDetails'
 
 
@@ -17,26 +17,23 @@ const CountrySearch = () => {
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
-        console.log('promise fulfilled')
         setCountries(response.data)
       })
   }, [])
-  console.log('render', countries.length, 'countries')
-  console.log(countries)
-
+  
   const filterCountries = () => {
 
     const filt= countries.filter((c) => {
         return( c.name.toLowerCase().includes(searchFilter.toLowerCase()))
     } )
-    console.log(filt.length)
+    
     if(filt.length > 10) {
         setTooMany(true)
         setShowDetails(false)
         setFilteredCountries(filt)
     }
     else {
-        console.log('ei montaa')
+        
         setTooMany(false)
         setShowDetails(false)
         setFilteredCountries(filt)
@@ -52,10 +49,15 @@ const CountrySearch = () => {
     filterCountries()
   }
 
-
-  console.log(searchFilter)
-  console.log('toomany',tooMany)
-//   console.log(filterCountries())
+const showCountry = (event) => {
+ 
+  const filt= countries.filter((c) => {
+        return( c.name.toLowerCase().includes(event.target.value.toLowerCase()))
+    } )
+    setTooMany(false)        
+    setShowDetails(true)
+    setFilteredCountries(filt)
+}
     return (
         <div>
         <div>countries:</div>
@@ -73,7 +75,9 @@ const CountrySearch = () => {
               {filteredCountries.map((c,i) => {
              return(
                  
-                    <List.Item as='li' key={i}>{c.name}</List.Item>
+                    <List.Item as='li' key={i}>{c.name}
+                    <Button className={c.name} value={c.name} onClick={showCountry}>show</Button>
+                    </List.Item>
                  
              )})}
          </List>

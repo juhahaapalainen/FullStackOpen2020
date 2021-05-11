@@ -1,17 +1,19 @@
 import React from 'react'
 import { Container, Divider, Header, Image } from 'semantic-ui-react'
+import GetWeather from './GetWeather'
 
 
 
-const CountryDetails = (country) => {
+const CountryDetails = ({country}) => {
 
    
-  console.log(country)
+  // console.log(country)
     return (
         
   <Container textAlign='right'>
-        {country.country.map((c,i) =>
-         <Container textAlign='center'>
+        {country.map((c,i) =>
+
+         <Container textAlign='center' key={i}>
         <Header as='h1'>{c.name}</Header>
         <Divider/>
          <div>Capital: {c.capital}</div>
@@ -24,9 +26,12 @@ const CountryDetails = (country) => {
         <Divider/>
         <img src={c.flag} alt="flag" height="20%" width="20%"></img>
         {/* {<Image src={c.flag} size='mini'/>} */}
-
+        {c.capital ? <GetWeather city={c.capital}/>:<div>cannot get weather</div>}
+          
         </Container>
          )}
+
+         
         </Container>
         
       
